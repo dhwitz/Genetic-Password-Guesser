@@ -48,7 +48,7 @@ class Genetic_algorithm:
                 newstring += current[i]
         return self.Entity(newstring, 0)
 
-    def update_population(self):  # mutates the population
+    def update_population(self):  # Does selection, crossover and then mutation of the children
         tenth = self.entities//10 
         newlist = self.population[0:tenth] #selects the top 10% of the population to reproduce
         for i in range(0, ((tenth) * 9)): 
