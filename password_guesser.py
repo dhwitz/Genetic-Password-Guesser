@@ -48,7 +48,7 @@ class Genetic_algorithm:
                 newstring += current[i]
         return self.Entity(newstring, 0)
 
-    def mutate_population(self):  # mutates the population
+    def update_population(self):  # mutates the population
         tenth = self.entities//10 
         newlist = self.population[0:tenth] #selects the top 10% of the population to reproduce
         for i in range(0, ((tenth) * 9)): 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         fitness_values = []
         while world.bestfitness < 1:
             counter += 1
-            world.mutate_population()
+            world.update_population()
             if not args.silent:
                 print("Generation {} = {}".format(str(counter), world.get_max()))
             fitness_values.append(world.get_max().get_fitness())
