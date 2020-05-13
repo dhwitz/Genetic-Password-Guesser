@@ -1,5 +1,6 @@
 from random import randint
 import argparse
+import matplotlib.pyplot as plt 
 
 class Genetic_algorithm:
     def __init__(self, target="Hello World", chance=5, entities=500):
@@ -87,6 +88,32 @@ class Genetic_algorithm:
             return("Fitness: {:.4f}, String: {}".format(self.fitness, self.string))
 
 
+def generate_graph(y, title, xlabel = 'Generation', ylabel = 'Fitness', g_type = 1):
+    # x axis values 
+    # corresponding y axis values 
+    x = []
+    for i in range(len(y)):
+        x.append(i+1)
+    
+    # plotting the points  
+    if g_type == 1:
+        plt.plot(x, y) 
+    elif g_type == 2:
+        plt.plot(x, y, color='blue', linestyle='dashed', linewidth = 2, 
+        marker='o', markerfacecolor='red', markersize=8) 
+    
+    # naming the x axis 
+    plt.xlabel(xlabel) 
+    # naming the y axis 
+    plt.ylabel(ylabel) 
+    
+    # giving a title to my graph 
+    plt.title(title) 
+    
+    # function to show the plot 
+    plt.show() 
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -96,14 +123,30 @@ if __name__ == '__main__':
         help="The percentage chance of a mutation. Default is 5%.")
     parser.add_argument('-e',dest='entities', type=int, required = False, default = 500,
         help="The number of entities. Default is 500.")
+    parser.add_argument('-t',dest='times', type=int, required = False, default = 1,
+        help="The number of times to run the algorithm. Default is 1.")
+    parser.add_argument('--silent',dest='silent', action='store_true', required = False,
+        help="Set this flag if you want to run in silent mode and evaluate performance over time.")
 
     args = parser.parse_args()
 
+    runs = []
 
-    world = Genetic_algorithm(args.string, args.chance, args.entities)
-    world.initialize_pop()
-    counter = 0
-    while world.bestfitness < 1:
-        counter += 1
-        world.mutate_population()
-        print("Generation {} = {}".format(str(counter), world.get_max()))
+    for i in range(args.times):
+        world = Genetic_algorithm(args.string, args.chance, args.entities)
+        world.initialize_pop()
+        counter = 0
+        fitness_values = []
+        while world.bestfitness < 1:
+            counter += 1
+            world.mutate_population()
+            if not args.silent:
+                print("Generation {} = {}".format(str(counter), world.get_max()))
+            fitness_values.append(world.get_max().get_fitness())
+
+        runs.append(counter)
+        if not args.silent:
+            generate_graph(fitness_values, "Guessing Performance (Run {})".format(i+1))
+    
+    if args.silent:
+        generate_graph(runs, "Performace over multiple runs", xlabel = "Run", ylabel = "Generations", g_type=2)
