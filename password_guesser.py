@@ -49,9 +49,9 @@ class Genetic_algorithm:
         return self.Entity(newstring, 0)
 
     def mutate_population(self):  # mutates the population
-        tenth = self.entities//10
-        newlist = self.population[0:tenth]
-        for i in range(0, ((tenth) * 9)):
+        tenth = self.entities//10 
+        newlist = self.population[0:tenth] #selects the top 10% of the population to reproduce
+        for i in range(0, ((tenth) * 9)): 
             newlist.append(self.create_child(newlist[randint(
                 0, tenth - 1)], newlist[randint(0, tenth - 1)]))
         for i in range(1, len(newlist)):
